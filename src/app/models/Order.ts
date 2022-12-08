@@ -1,3 +1,6 @@
+import { Customer } from "./Customer";
+import { Product } from "./Product";
+
 export class Order {
     order_id: number=0;
     totalPrice: number= 0 ;
@@ -7,6 +10,6 @@ export class Order {
     address: string='';
     customerId: number= 0;
     productId: number=0;
-    product:any;
-    customer:any;
+    product = new Product();
+    customer = new Customer();
 }

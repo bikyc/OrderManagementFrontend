@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Customer } from '../models/Customer';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';
@@ -16,20 +17,77 @@ export class OrderComponent {
   customers = new Array<Customer>();
   product = new Product();
   products= new Array<Product>();
-  selectedProduct= new Product();
+  selectedProduct = new Product();
   orderToUpdate: Order= new Order();
-  constructor(private commonservice: CommonService) {}
+  orderRate:any;
+  price:any;
+  submitted= false;
+  OrderForm : FormGroup;
+  CustomerForm: FormGroup;
+  ProductForm: FormGroup;
+  orderQuantity:any;
+  showAddOrder: boolean= false;
+  selectedCustomer: string = "";
+  @ViewChild('closeModal') closebutton;
+
+  constructor(private commonservice: CommonService,
+     public formGroup: FormBuilder) {
+    this.OrderForm = this.formGroup.group({
+   
+      quantity: ['', Validators.required],
+      totalPrice: ['', Validators.required],
+      customercust_id: ['', Validators.required],
+      productId: ['', Validators.required],
+      pPrice: ['', Validators.required],
+    })
+  }
 
   ngOnInit() {
     this.getCustomer()
     this.getOrders();
     this.getProducts();
   }
+  onSubmit(){
+    this.submitted=true;
+    if(this.OrderForm.invalid){
+      return;
+    }
+    alert('success')
+   }
 
+   resetOrderForm()
+   {
+    this.OrderForm.reset();
+    this.OrderForm.updateValueAndValidity();
+   }
+   OpenAddOrder() {
+    this.showAddOrder = true
+  }
+
+  
   AddOrder() {
-    this.commonservice.addOrder(this.order).subscribe((response: any) => {
-      console.log(response);
-    });
+
+    const orderObj ={
+      customercust_id: +this.OrderForm.controls['customercust_id'].getRawValue(),
+      productId: +this.OrderForm.controls['productId'].getRawValue(),
+      totalPrice: this.OrderForm.controls['totalPrice'].getRawValue(),
+      quantity: this.OrderForm.controls['quantity'].getRawValue(),
+    };
+    if (this.OrderForm.valid) {
+      this.commonservice.addOrder(orderObj).subscribe((response: any) => {
+        console.log(response);
+        this.closebutton.nativeElement.click();
+        this.showAddOrder= false;
+        this.resetOrderForm();
+        this.getOrders();
+      },err =>{
+       console.log(err);
+      // this.closebutton.nativeElement.click();
+      });
+    }
+  }
+  resetOrderModal(){
+    this.OrderForm.reset();
   }
 
   getOrders() {
@@ -45,7 +103,7 @@ export class OrderComponent {
     );
     // to get customer name
   }
-
+// get customer name from customer table 
   getCustomer() {
     this.commonservice.getAllCustomer().subscribe(
       (res: any) => {
@@ -58,12 +116,11 @@ export class OrderComponent {
     );
   }
 
+  // get product name and price from product tabel 
   getProducts() {
     this.commonservice.getAllProducts().subscribe(
       (res: any) => {
         console.log(res);
-        let orderList=res;
-        this.order=orderList.filter(x=>x.isActive==true)
         this.products = res;
       },
       (err: any) => {
@@ -72,27 +129,39 @@ export class OrderComponent {
     );
   }
   onCustomerChange($event: any){
-    console.log($event.target.value);
-    this.order.customerId = Number($event.target.value);
-
+   this.OrderForm.controls['customercust_id'].setValue($event.target.value);
   }  
 
-  onProductChange( ){
+  // on selecting product its price should be auto populated 
+  onProductChange($event:any){
     if(this.selectedProduct!=null){
-      this.order.productId=this.selectedProduct.prod_id;
-      this.order.price=this.selectedProduct.pPrice;
+    this.OrderForm.controls['productId'].setValue($event.target.value);
+    this.order.price=this.products.find(x => x.prod_id == +($event.target.value)).pPrice;
+    this.OrderForm.controls['pPrice'].setValue(this.order.price);
     }
-    // console.log($event.target.value);
-    // this.order.productId = Number($event.target.value);
   }
+    
+  
   onQuantityChange(){
-    this.order.totalPrice= this.order.quantity*this.order.price;
+    // this.order.totalPrice= this.order.quantity*this.order.price;
+    this.OrderForm.controls['totalPrice'].setValue(this.OrderForm.controls['pPrice'].value*this.OrderForm.controls['quantity'].value);
   }
-   EditOrderDetails(id: number){
-    this.commonservice.getProductById(id).subscribe(
-      (res:any)=> {
-        this.orderToUpdate = res;
-      });
+   EditOrderDetails(order: Order){
+    console.log(order);
+    // this.commonservice.getOrderById(order.order_id).subscribe(
+    //   (res:any)=> {
+    //     this.orderToUpdate = res;
+    //     console.log(this.orderToUpdate);
+    //     this.orderQuantity=this.orderToUpdate[0].quantity;
+    //     this.orderRate=this.orderToUpdate[0].product.pPrice;
+    //     this.selectedCustomer=this.orderToUpdate[0].customer;
+    //     this.selectedProduct=this.orderToUpdate[0].product;
+    //   });
+    this.orderQuantity = order.quantity;
+    this.selectedCustomer = order.customer.name;
+    this.selectedProduct = order.product;
+    this.orderRate = order.product.pPrice;
+
    }
 
    UpdateOrder(){
@@ -101,5 +170,20 @@ export class OrderComponent {
         console.log(res);
         this.getOrders();
       });
+   }
+
+   getOrderIdForDelete(id: number){
+      this.order.order_id = id;
+   }
+
+   deleteOrder(){
+    this.commonservice.deleteOrder(this.order.order_id).subscribe((res: any) => {
+      console.log(res);
+      this.clear();
+      this.getOrders();
+    })
+   }
+   clear(){
+    this.order.order_id=0;
    }
 }

@@ -1,107 +1,151 @@
-<!-- Add customer form starts-->
-<ng-container>
-    <div class="col-md-3">
-        <label for="CustomerName" class="form-label">Full Name</label>
-        <input type="text" class="form-control" id="exampleNameInput" [(ngModel)]="customer.name">
-    
-      </div>
-      
-      <div class="col-md-3">
-        <label for="exampleInputAddress" class="form-label">Address</label>
-        <input type="text" class="form-control" id="exampleInputAddress" [(ngModel)]="customer.address">
-      </div>
-    <div class="col-md-3">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" [(ngModel)]="customer.email">
-    </div>
-   <br>
-   
-    <button type="submit" class="btn btn-primary" (click)="AddCustomer()">Add Customer</button>
-  <br>
-</ng-container>
-<!-- Add customer form ends-->
-
-
-  <!-- table starts-->
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Full Name</th>
-        <th scope="col">Email</th>
-        <th scope="col">Address</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody >
-      <tr *ngFor="let c of customers">
-        <th scope="row">{{c.cust_id}}</th>
-        <td>{{c.name}}</td>
-        <td>{{c.email}}</td>
-        <td>{{c.address}}</td>
-        <td>
-            <button class="btn btn-primary" (click)="EditCustomerDetails(c.cust_id)" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="@getbootstrap" >Edit</button> ||
-            <button class="btn btn-danger" (click)="deleteCustomer(c.cust_id)" data-bs-toggle="modal"  data-bs-target="#DeleteModal">Delete</button>
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
-
-
- 
-  
-  <!-- Delete Modal -->
-  <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
+<!-- Add customer modal-->
+<div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="CustomerForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Customer Delete Confirmation</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h4 class="modal-title" id="exampleModalLabel">
+            Add Customer Details
+          </h4>
+          <button type="button" class="btn-close" #closeModal data-bs-dismiss="modal" aria-label="Close" (click)="resetCustomereForm()"></button>
         </div>
         <div class="modal-body">
-          Are sure you want to delete the customer ???
+          <div class="col-md-6">
+            <label for="CustomerName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="exampleNameInput" formControlName="name"
+              [ngClass]="{'is-invalid': CustomerForm.controls['name'].errors && (CustomerForm.get('name').touched && CustomerForm.get('name').dirty) }" />
+              <small *ngIf=" CustomerForm.controls['name'].errors &&((CustomerForm.get('name').touched ) || (CustomerForm.get('name').dirty))" class="text-danger">Fullname is required</small>
+            <br>
+          </div>
+          <div class="col-md-6">
+            <label for="exampleInputAddress" class="form-label">Address</label>
+            <input type="text" class="form-control" id="exampleInputAddress" formControlName="address"
+              [ngClass]="{'is-invalid': submitted && CustomerForm.controls['address'].errors && ( CustomerForm.get('address').touched || CustomerForm.get('address').dirty) }" />
+              <small *ngIf="CustomerForm.controls['address'].errors && ( CustomerForm.get('address').touched || CustomerForm.get('address').dirty)" class="text-danger">Address is required</small>
+          <br>
+          </div>
+          <div class="col-md-6">
+            <label for="exampleInputEmail1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+              formControlName="email" [ngClass]="{'is-invalid': submitted && CustomerForm.controls['email'].errors && (CustomerForm.get('email').touched || CustomerForm.get('email').dirty) }" />
+              <small *ngIf="CustomerForm.get('email').errors && (CustomerForm.get('email').touched || CustomerForm.get('email').dirty)" class="text-danger">Email is required</small>
+              <small *ngIf="CustomerForm.get('email').errors && submitted && CustomerForm.get('email').errors['pattern'] " class="text-danger" >Enter valid email address</small>
+            <br>
+          </div>
+          <br />
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">NO</button>
-          <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" (click)="getCustomer()">Yes</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetCustomereForm()">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary" (click)="AddCustomer()">
+            Add Customer
+          </button>
         </div>
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- add customer modal-->
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddModal" data-bs-whatever="@getbootstrap" (click)="OpenAddCustomer()">
+  Add New customer
+</button>
+<br />
+<br />
+
+<!-- table starts-->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Full Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Address</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of customers; let i = index;">
+      <th scope="row">{{ i + 1 }}</th>
+      <td>{{ c.name }}</td>
+      <td>{{ c.email }}</td>
+      <td>{{ c.address }}</td>
+      <td>
+        <button class="btn btn-primary" (click)="EditCustomerDetails(c.cust_id)" data-bs-toggle="modal"
+          data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">
+          Edit
+        </button>
+        ||
+        <button class="btn btn-danger" (click)="getCustomerIdForDelete(c.cust_id)" data-bs-toggle="modal"
+          data-bs-target="#DeleteModal">
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Customer Delete Confirmation
+        </h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">Are sure you want to delete the customer ???</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+          NO
+        </button>
+        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" (click)="deleteCustomer()">
+          Yes
+        </button>
       </div>
     </div>
   </div>
+</div>
 
-
-  <!-- edit modal-->
-
+<!-- edit modal-->
 
 <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="exampleModalLabel">Update Customer Details</h4>
+        <h4 class="modal-title" id="exampleModalLabel">
+          Update Customer Details
+        </h4>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        
-          <div class="mb-3">
-            <label for="FullName" class="col-form-label">Full Name:</label>
-            <input type="text" class="form-control" id="full-name" [(ngModel)]="customerToUpdate.name">
-          </div>
-          <div class="mb-3">
-            <label for="Address" class="col-form-label">Address</label>
-            <input type="text" class="form-control" id="address" [(ngModel)]="customerToUpdate.address">
-          </div>
-          <div class="mb-3">
-            <label for="email" class="col-form-label">Email </label>
-            <input type="email" class="form-control" id="email" [(ngModel)]="customerToUpdate.email">
-          </div>
-        
+        <div class="mb-3">
+          <label for="FullName" class="col-form-label">Full Name:</label>
+          <input type="text" class="form-control" id="full-name" [(ngModel)]="customerToUpdate.name" />
+        </div>
+        <div class="mb-3">
+          <label for="Address" class="col-form-label">Address</label>
+          <input type="text" class="form-control" id="address" [(ngModel)]="customerToUpdate.address" />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="col-form-label">Email </label>
+          <input type="email" class="form-control" id="email" [(ngModel)]="customerToUpdate.email" />
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="UpdateCustomer()">Update</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="UpdateCustomer()">
+          Update
+        </button>
       </div>
     </div>
   </div>

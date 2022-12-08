@@ -1,77 +1,110 @@
-<p>product works!</p>
+<!-- Add product modal starts -->
 
-<ng-container>
-    <div class="col-md-3">
-        <label for="ProductName" class="form-label">Product Name</label>
-        <input type="text" class="form-control" id="exampleProductName" [(ngModel)]="product.pName" >
-    
-      </div>
-      <br>
-      <div class="col-md-3">
-        <label for="exampleInputMfdDate" class="form-label">Manufactured Date</label>
-        <input type="date" class="form-control" id="exampleInputMfdDate" [(ngModel)]="product.pMfdDate">
-      </div>
-      <br>
-    <div class="col-md-3">
-      <label for="exampleInputPrice" class="form-label">Price</label>
-      <input type="number" class="form-control" id="exampleInputPrice" [(ngModel)]="product.pPrice">
-      
-    </div>
-   <br>
-   
-    <button type="submit" class="btn btn-primary" (click)="AddProduct()">Add Product</button>
-  </ng-container>
-  <br>
-    <!-- table starts-->
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Product Name</th>
-            <th scope="col">Manufactured Date</th>
-             <th scope="col">Price</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of products">
-            <th scope="row">{{p.prod_id}}</th>
-            <td>{{p.pName}}</td>
-            <td>{{p.pMfdDate | date}}</td>
-            <td>{{p.pPrice}}</td>
-            <td>
-                <button class="btn btn-primary" (click)="EditProductDetails(p.prod_id)" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> ||
-                <button class="btn btn-danger" type="submit"  data-bs-toggle="modal"  data-bs-target="#DeleteModal">Delete</button>
-            </td>
-          </tr>
-          
-        </tbody>
-      </table>
-
-
- <!-- Delete Modal -->
- <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
+<div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="ProductForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Product Delete Confirmation</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h4 class="modal-title" id="exampleModalLabel">
+            Add Product Details</h4>
+          <button type="button" class="btn-close" #closeModal data-bs-dismiss="modal" aria-label="Close" (click)="resetProductForm()"></button>
         </div>
         <div class="modal-body">
-          Are sure you want to delete the Product ???
+          <div class="col-md-6">
+            <label for="ProductName" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="exampleProductName"   formControlName="pName"
+            [ngClass]="{'is-invalid':  ProductForm.controls['pName'].errors && (ProductForm.get('pName').touched || ProductForm.get('pName').dirty)}">
+            <small *ngIf="ProductForm.controls['pName'].errors && (ProductForm.get('pName').touched || ProductForm.get('pName').dirty)" class="text-danger">Product Name is
+              required</small>
+          </div>
+          <br>
+          <div class="col-md-6">
+            <label for="exampleInputMfdDate" class="form-label">Manufactured Date</label>
+            <input type="date" class="form-control" id="exampleInputMfdDate"
+              [ngClass]="{'is-invalid': ProductForm.controls['pMfdDate'].errors && (ProductForm.get('pMfdDate').touched || ProductForm.get('pMfdDate').dirty)}"
+              formControlName="pMfdDate">
+            <small *ngIf="ProductForm.controls['pMfdDate'].errors && (ProductForm.get('pMfdDate').touched || ProductForm.get('pMfdDate').dirty)" class="text-danger">Manufactured date is
+              required</small>
+          </div>
+          <br>
+          <div class="col-md-6">
+            <label for="exampleInputPrice" class="form-label">Price</label>
+            <input type="number" min="0" class="form-control" id="exampleInputPrice"
+              [ngClass]="{'is-invalid': ProductForm.controls['pPrice'].errors && (ProductForm.get('pPrice').touched || ProductForm.get('pPrice').dirty)}" formControlName="pPrice">
+            <small *ngIf=" ProductForm.controls['pPrice'].errors && (ProductForm.get('pPrice').touched || ProductForm.get('pPrice').dirty)" class="text-danger">Price is
+              required
+            </small>
+
+          </div>
+          <br>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">NO</button>
-          <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Yes</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetProductModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" (click)="AddProduct()">Add Product</button>
         </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add product modal ends here-->
+
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddModal" data-bs-whatever="@getbootstrap"  (click)="OpenAddProduct()" >Add
+  New Product </button>
+
+<!-- table starts-->
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Manufactured Date</th>
+      <th scope="col">Price</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let p of products; let i = index">
+      <th scope="row">{{ i + 1}}</th>
+      <td>{{p.pName}}</td>
+      <td>{{p.pMfdDate | date}}</td>
+      <td>{{p.pPrice}}</td>
+      <td>
+        <button class="btn btn-primary" (click)="EditProductDetails(p.prod_id)" data-bs-toggle="modal"
+          data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> ||
+        <button class="btn btn-danger" (click)="GetIdToDelete(p.prod_id)" type="submit" data-bs-toggle="modal"
+          data-bs-target="#DeleteModal">Delete</button>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+
+<!-- Delete Modal -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Product Delete Confirmation</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are sure you want to delete the Product ???
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="Clear()" class="btn btn-outline-danger" data-bs-dismiss="modal">NO</button>
+        <button type="button" (click)="deleteProduct()" class="btn btn-outline-success"
+          data-bs-dismiss="modal">Yes</button>
       </div>
     </div>
   </div>
+</div>
 
 
-  <!-- edit modal-->
+<!-- edit modal-->
 
 
 <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
@@ -83,18 +116,18 @@
       </div>
       <div class="modal-body">
         <!-- <form> -->
-          <div class="mb-3">
-            <label for="product" class="col-form-label"> Product Name:</label>
-            <input type="text" class="form-control" id="Productname" [(ngModel)]="productToUpdate.pName">
-          </div>
-          <div class="mb-3">
-            <label for="MfdDate" class="col-form-label">Manufactured date</label>
-            <input type="Date" class="form-control" id="MfdDate" [(ngModel)]="productToUpdate.pMfdDate">
-          </div>
-          <div class="mb-3">
-            <label for="Price" class="col-form-label">Price </label>
-            <input type="number" class="form-control" id="Price" [(ngModel)]="productToUpdate.pPrice">
-          </div>
+        <div class="mb-3">
+          <label for="product" class="col-form-label"> Product Name:</label>
+          <input type="text" class="form-control" id="Productname" [(ngModel)]="productToUpdate.pName">
+        </div>
+        <div class="mb-3">
+          <label for="MfdDate" class="col-form-label">Manufactured date</label>
+          <input type="Date" class="form-control" id="MfdDate" [(ngModel)]="productToUpdate.pMfdDate">
+        </div>
+        <div class="mb-3">
+          <label for="Price" class="col-form-label">Price </label>
+          <input type="number" class="form-control" id="Price" [(ngModel)]="productToUpdate.pPrice">
+        </div>
         <!-- </form> -->
       </div>
       <div class="modal-footer">
@@ -104,6 +137,3 @@
     </div>
   </div>
 </div>
-
-      
-

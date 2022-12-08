@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Product } from '../models/Product';
 import { CommonService } from '../Shared/common.service';
 
@@ -12,19 +13,67 @@ export class ProductComponent {
   product = new Product();
   products = new Array<Product>();
   productToUpdate: Product= new Product();
+  ProductForm: FormGroup;
+  submitted=false;
+  showAddProduct = false;
+  
+  @ViewChild('closeModal') closebutton;
 
-   constructor (private commonservice: CommonService){}
+   constructor (private commonservice: CommonService, public formGroup: FormBuilder){
+    this.ProductForm = this.formGroup.group({
+      pName:['',Validators.required],
+      pMfdDate:['',Validators.required],
+      pPrice:['', Validators.required]
+    })
+   }
 
    ngOnInit(){
     this.getProduct();
    }
+   onSubmit(){
+    this.submitted=true;
+    if(this.ProductForm.invalid){
+      return;
+    }
+    alert('success')
+   }
+
+   resetProductForm() {
+    this.ProductForm.reset();
+    this.ProductForm.updateValueAndValidity();
+  }
+
+   OpenAddProduct() {
+    this.showAddProduct = true;
+  }
 
    AddProduct(){
-    this.commonservice.addProduct(this.product).subscribe((response: any) => {
-      console.log(response);
+    const productObj= {
+      pName: this.ProductForm.controls['pName'].getRawValue(),
+      pMfdDate: this.ProductForm.controls['pMfdDate'].getRawValue(),
+      pPrice: this.ProductForm.controls['pPrice'].getRawValue()
+    }
+    if(this.ProductForm.valid){
+    this.commonservice.addProduct(productObj).subscribe((response: any) => {
+      alert("Product Added Successfully")
+      this.closebutton.nativeElement.click();
+      this.resetProductForm();
+      this.getProduct();
      });
+     (err) => {
+      console.log(err);
+    }
+    }
+    (err) => {
+      console.log(err);
+    }
    }
-   
+
+   resetProductModal()
+ {
+  this.ProductForm.reset();
+ } 
+
    getProduct(){
    this.commonservice.getAllProducts().subscribe(
     (res:any) =>{
@@ -49,5 +98,21 @@ export class ProductComponent {
       console.log(response);
       this.getProduct();
      });
+  }
+
+  GetIdToDelete(productId: number){
+    this.product.prod_id=productId;
+
+  }
+
+  deleteProduct(){
+    this.commonservice.deleteProduct(this.product.prod_id).subscribe(res=>{
+      console.log(res);
+      this.Clear();
+      this.getProduct();
+    })
+  }
+  Clear(){
+    this.product.prod_id=0;
   }
 }

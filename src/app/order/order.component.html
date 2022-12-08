@@ -1,100 +1,153 @@
-<p>order works!</p>
+<!-- Add new order modal starts -->
 
-<ng-container>
-    <div class="col-md-3">
-        <label for="inputState" class="form-label">Select Customer</label>
-        <select id="inputState" class="form-select" (change)="onCustomerChange($event)">
-          <option selected>--select customer--</option>
-          <option value="{{cust.cust_id}}" *ngFor="let cust of customers">{{cust.name}}</option>
-        </select>
-    </div>
-        <br>
-    <div class="col-md-3">
-        <label for="inputState" class="form-label">Select Product</label>
-        <select id="inputState" class="form-select" [(ngModel)]="selectedProduct" (change)="onProductChange()">
-          <option disabled [ngValue]="null" selected>--Product--</option>
-          <option [ngValue]="prod" *ngFor="let prod of products">{{prod.pName}}</option>
-        </select>
-    </div>
-      <br>
-    <div class="col-md-3">
-        <label for="exampleInputPrice" class="form-label">Price</label>
-        <input type="number" class="form-control" id="exampleInputPrice" [(ngModel)]="order.price" >
-    </div>
-
-    <div class="col-md-2">
-        <label for="exampleInputQuantity" class="form-label">Quantity</label>
-        <input type="number" class="form-control" id="exampleInputQuantity" [(ngModel)]="order.quantity" (ngModelChange)="onQuantityChange()">
-    </div>
-    <br>
-    <div class="col-md-2">
-        <input class="form-control" type="text" [(ngModel)]="order.totalPrice" aria-label="Total Price" readonly>
-    </div>
-   <br>
-    <button type="submit" class="btn btn-primary" (click)="AddOrder()">Place Order</button>
-</ng-container>
-    
-  <br>
-
-   <!-- table starts-->
-   <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col"> CustomerName</th>
-        <th scope="col">Product Name</th>
-        <th scope="col">Ordered Date</th>
-         <th scope="col">Price</th>
-         <th scope="col"> Quantity</th>
-         <th scope="col"> Total Price</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let o of Orders">
-        <th scope="row">{{o.order_id}}</th>
-        <td>{{o.customer.name}}</td>
-        <td> {{o.product.pName}}</td> 
-        <td> {{o.orderDate | date}}</td>
-        <td> {{o.product.pPrice}} </td>
-        <td>{{o.quantity}}</td>
-        <td> {{o.totalPrice}}</td>
-        <td>
-            <button class="btn btn-primary" (click)="EditOrderDetails(o.order_id)" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> ||
-            <button class="btn btn-danger" type="submit"  data-bs-toggle="modal"  data-bs-target="#DeleteModal">Delete</button>
-        
-        </td>
-      </tr>
-      
-    </tbody>
-  </table>
-
-
-   <!-- Delete Modal -->
-   <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
+<div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="OrderForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Order Delete Confirmation</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h4 class="modal-title" id="exampleModalLabel">Add new Order Details</h4>
+          <button type="button" #closeModal (click)="resetOrderForm()" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Are sure you want to delete the Order ???
+          <div class="col-md-6">
+            <label for="inputState" class="form-label">Select Customer</label>
+            <select id="inputState" class="form-select" 
+            (change)="onCustomerChange($event)" formControlName="customercust_id"
+              [ngClass]="{'is-invalid': OrderForm.controls['customercust_id'].errors && (OrderForm.get('customercust_id').touched && OrderForm.get('customercust_id').dirty) }">
+              <option disabled [ngValue]="null" selected>--select customer--</option>
+              <option value="{{ cust.cust_id }}" *ngFor="let cust of customers">
+                {{ cust.name }}
+              </option>
+            </select>
+            <div>
+              <small
+                *ngIf=" OrderForm.controls['customercust_id'].errors && ((OrderForm.get('customercust_id').touched ) || (OrderForm.get('customercust_id').dirty))"
+                class="text-danger">Customer is required</small>
+
+            </div>
+          </div>
+          <br/>
+          <div class="col-md-6">
+            <label for="inputState" class="form-label">Select Product</label>
+            <select id="inputState" class="form-select" formControlName="productId" (change)="onProductChange($event)"
+              [ngClass]="{'is-invalid': OrderForm.controls['productId'].errors && ((OrderForm.get('productId').touched && OrderForm.get('productId').dirty)) }">
+              <option disabled [ngValue]="null" selected>--Product--</option>
+              <option value="{{prod.prod_id}}" *ngFor="let prod of products">
+                {{ prod.pName }}
+              </option>
+            </select>
+            <div>
+              <small
+              *ngIf=" OrderForm.controls['productId'].errors &&((OrderForm.get('productId').touched ) || (OrderForm.get('productId').dirty))"
+              class="text-danger">Product is required</small>
+            </div>
+          </div>
+          <br />
+          <div class="col-md-6">
+            <label for="exampleInputPrice" class="form-label">Price</label>
+            <input readonly type="number" class="form-control" id="exampleInputPrice" formControlName="pPrice" />
+          </div>
+          <br>
+          <div class="col-md-4">
+            <label for="exampleInputQuantity" class="form-label">Quantity</label>
+            <input type="number" min="0" class="form-control" formControlName="quantity" id="exampleInputQuantity" 
+               (ngModelChange)="onQuantityChange()"
+               [ngClass]="{'is-invalid': OrderForm.controls['quantity'].errors && ((OrderForm.get('quantity').touched ) || (OrderForm.get('quantity').dirty))}" />
+            <small
+              *ngIf="OrderForm.controls['quantity'].errors && ((OrderForm.get('quantity').touched ) || (OrderForm.get('quantity').dirty))"
+              class="text-danger">Number of quntity is required</small>
+            <br>
+          </div>
+          <br />
+          <div class="col-md-4">
+            <label> Total Amount</label>
+            <input class="form-control" type="text" formControlName="totalPrice" aria-label="Total Price" readonly />
+
+          </div>
+          <br />
+          <div class="footer" layout="row" layout-align="center center ">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
+              (click)="resetOrderModal()">Cancel</button> ||
+            <button type="submit" class="btn btn-primary" (click)="AddOrder()"> Place Order </button>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">NO</button>
-          <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Yes</button>
-        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add new modal ends -->
+<br>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddModal" (click)="OpenAddOrder()"
+  data-bs-whatever="@getbootstrap">
+  Add New Order
+</button>
+<br />
+<br>
+
+<!-- List of order table starts-->
+<table class="table" *ngIf="Orders && Orders.length">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">CustomerName</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Ordered Date</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let o of Orders let i=index;">
+      <td scope="row">{{ i+1 }}</td>
+      <td>{{ o.customer?.name }}</td>
+      <td>{{ o.product?.pName }}</td>
+      <td>{{ o.orderDate | date }}</td>
+      <td>{{ o.product?.pPrice }}</td>
+      <td>{{ o.quantity }}</td>
+      <td>{{ o.totalPrice }}</td>
+      <td>
+        <!-- <button class="btn btn-primary" (click)="EditOrderDetails(o)" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> || -->
+        <button class="btn btn-danger" (click)="getOrderIdForDelete(o.order_id)" data-bs-toggle="modal"
+          data-bs-target="#DeleteModal">
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Order Delete Confirmation
+        </h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">Are sure you want to delete the Order ???</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+          NO
+        </button>
+        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" (click)="deleteOrder()">
+          Yes
+        </button>
       </div>
     </div>
   </div>
+</div>
 
+<!-- edit modal-->
 
-  <!-- edit modal-->
-
-
+<!-- 
 <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -103,33 +156,32 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
             <div class="col-md-4">
                 <label for="inputState" class="form-label">Select Customer</label>
-                <select id="inputState" class="form-select">
-                  <option value="{{cust.cust_id}}" *ngFor="let cust of customers" >{{cust.name}}</option>
+                <select id="inputState" class="form-select" [(ngModel)]="selectedCustomer" (change)="onCustomerChange($event)">
+                  <option selected>Choose...</option>
+                  <option value="{{cust.name}}" *ngFor="let cust of customers">{{cust.name}}</option>
                 </select>
             </div>
                 <br>
             <div class="col-md-4">
                 <label for="inputState" class="form-label">Select Product</label>
-                <select id="inputState" class="form-select">
-                 <option [ngValue]="prod" *ngFor="let prod of products">{{prod.pName}}</option>
+                <select id="inputState" class="form-select" [(ngModel)]="selectedProduct" (change)="onProductChange()">
+                  <option [ngValue]="prod.pName" *ngFor="let prod of products">{{prod.pName}}</option>
                 </select>
             </div>
               <br>
             <div class="col-md-4">
                 <label for="exampleInputPrice" class="form-label">Price</label>
-                <input type="number" class="form-control" id="exampleInputPrice" [(ngModel)]="orderToUpdate.price">
+                <input type="number" [(ngModel)]="orderRate"  class="form-control" id="exampleInputPrice">
             </div>
                 <br>
             <div class="col-md-4">
                 <label for="exampleInputQuantity" class="form-label">Quantity</label>
-                <input type="number" class="form-control" id="exampleInputQuantity" [(ngModel)]="orderToUpdate.quantity">
+                <input type="number" [(ngModel)]="orderQuantity" class="form-control" id="exampleInputQuantity">
             </div>
             <br>
             
-            </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
@@ -137,5 +189,4 @@
       </div>
     </div>
   </div>
-</div>
-
+</div> -->
