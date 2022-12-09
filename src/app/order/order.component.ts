@@ -28,6 +28,7 @@ export class OrderComponent {
   orderQuantity:any;
   showAddOrder: boolean= false;
   selectedCustomer: string = "";
+
   @ViewChild('closeModal') closebutton;
 
   constructor(private commonservice: CommonService,
@@ -47,21 +48,21 @@ export class OrderComponent {
     this.getOrders();
     this.getProducts();
   }
-  onSubmit(){
-    this.submitted=true;
-    if(this.OrderForm.invalid){
-      return;
-    }
-    alert('success')
-   }
+  // onSubmit(){
+  //   this.submitted=true;
+  //   if(this.OrderForm.invalid){
+  //     return;
+  //   }
+  //   alert('success')
+  //  }
 
    resetOrderForm()
    {
-    this.OrderForm.reset();
-    this.OrderForm.updateValueAndValidity();
+    this.OrderForm.reset(); // reset the form 
+    this.OrderForm.updateValueAndValidity(); // reset the validity of te form 
    }
    OpenAddOrder() {
-    this.showAddOrder = true
+    this.showAddOrder = true //open the add new order form 
   }
 
   
@@ -76,10 +77,10 @@ export class OrderComponent {
     if (this.OrderForm.valid) {
       this.commonservice.addOrder(orderObj).subscribe((response: any) => {
         console.log(response);
-        this.closebutton.nativeElement.click();
-        this.showAddOrder= false;
-        this.resetOrderForm();
-        this.getOrders();
+        this.closebutton.nativeElement.click(); // on clicking x icon add new order form is closed 
+        this.showAddOrder= false; // add new order form is closed
+        this.resetOrderForm(); // entered data in add new order form is reset 
+        this.getOrders();  // list of order is displayed 
       },err =>{
        console.log(err);
       // this.closebutton.nativeElement.click();
@@ -87,7 +88,7 @@ export class OrderComponent {
     }
   }
   resetOrderModal(){
-    this.OrderForm.reset();
+    this.OrderForm.reset();  // entered data in add new order form is reset 
   }
 
   getOrders() {
@@ -95,7 +96,7 @@ export class OrderComponent {
       (res: any) => {
         console.log(res);
         let orderList = res;
-        this.Orders= orderList.filter(x=>x.isActive==true);
+        this.Orders= orderList.filter(x=>x.isActive==true);  // filter the list of orders that are active
       },
       (err: any) => {
         console.log(err);
@@ -108,7 +109,7 @@ export class OrderComponent {
     this.commonservice.getAllCustomer().subscribe(
       (res: any) => {
         console.log(res);
-        this.customers = res;
+        this.customers = res; 
       },
       (err: any) => {
         console.log(err);
@@ -135,6 +136,7 @@ export class OrderComponent {
   // on selecting product its price should be auto populated 
   onProductChange($event:any){
     if(this.selectedProduct!=null){
+
     this.OrderForm.controls['productId'].setValue($event.target.value);
     this.order.price=this.products.find(x => x.prod_id == +($event.target.value)).pPrice;
     this.OrderForm.controls['pPrice'].setValue(this.order.price);
@@ -184,6 +186,6 @@ export class OrderComponent {
     })
    }
    clear(){
-    this.order.order_id=0;
+    this.order.order_id=0;  // clears the id of the product that is to be deleted
    }
 }

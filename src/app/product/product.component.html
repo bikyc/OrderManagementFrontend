@@ -1,16 +1,22 @@
 <!-- Add product modal starts -->
 
-<div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+<div class="modal fade" id="AddUpdateModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <form [formGroup]="ProductForm" (ngSubmit)="onSubmit()">
         <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLabel">
+          <h4 class="modal-title" id="exampleModalLabel" *ngIf="isCreating">
             Add Product Details</h4>
+          <h4 class="modal-title" id="exampleModalLabel" *ngIf="isEditing">
+            Edit Product Details</h4>
           <button type="button" class="btn-close" #closeModal data-bs-dismiss="modal" aria-label="Close" (click)="resetProductForm()"></button>
         </div>
         <div class="modal-body">
-          <div class="col-md-6">
+
+          <app-add-update-product *ngIf="showAddProduct" [mode]="mode" [product]="productToUpdate" (on-product-add-update)="onProductAddOrUpdateCallback($event)"></app-add-update-product>
+
+
+          <!-- <div class="col-md-6">
             <label for="ProductName" class="form-label">Product Name</label>
             <input type="text" class="form-control" id="exampleProductName"   formControlName="pName"
             [ngClass]="{'is-invalid':  ProductForm.controls['pName'].errors && (ProductForm.get('pName').touched || ProductForm.get('pName').dirty)}">
@@ -34,13 +40,13 @@
             <small *ngIf=" ProductForm.controls['pPrice'].errors && (ProductForm.get('pPrice').touched || ProductForm.get('pPrice').dirty)" class="text-danger">Price is
               required
             </small>
-
-          </div>
+            
+          </div> -->
           <br>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetProductModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" (click)="AddProduct()">Add Product</button>
+          <!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetProductModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary" (click)="AddProduct()">Add Product</button> -->
         </div>
       </form>
     </div>
@@ -48,7 +54,7 @@
 </div>
 <!-- Add product modal ends here-->
 
-<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddModal" data-bs-whatever="@getbootstrap"  (click)="OpenAddProduct()" >Add
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUpdateModal" data-bs-whatever="@getbootstrap"  (click)="OpenAddProduct()" >Add
   New Product </button>
 
 <!-- table starts-->
@@ -69,8 +75,8 @@
       <td>{{p.pMfdDate | date}}</td>
       <td>{{p.pPrice}}</td>
       <td>
-        <button class="btn btn-primary" (click)="EditProductDetails(p.prod_id)" data-bs-toggle="modal"
-          data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> ||
+        <button class="btn btn-primary" (click)="EditProductDetails(p)" data-bs-toggle="modal"
+          data-bs-target="#AddUpdateModal" data-bs-whatever="@getbootstrap">Edit</button> ||
         <button class="btn btn-danger" (click)="GetIdToDelete(p.prod_id)" type="submit" data-bs-toggle="modal"
           data-bs-target="#DeleteModal">Delete</button>
       </td>
@@ -106,7 +112,7 @@
 
 <!-- edit modal-->
 
-
+<!--
 <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -115,7 +121,6 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <!-- <form> -->
         <div class="mb-3">
           <label for="product" class="col-form-label"> Product Name:</label>
           <input type="text" class="form-control" id="Productname" [(ngModel)]="productToUpdate.pName">
@@ -128,7 +133,6 @@
           <label for="Price" class="col-form-label">Price </label>
           <input type="number" class="form-control" id="Price" [(ngModel)]="productToUpdate.pPrice">
         </div>
-        <!-- </form> -->
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
@@ -136,4 +140,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

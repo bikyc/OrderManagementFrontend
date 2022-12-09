@@ -21,8 +21,11 @@ export class CustomerComponent implements OnInit {
   CustomerForm: FormGroup;
   submitted = false;
   showAddCustomer = false;
+  isEditing: boolean = false;
+  isCreating: boolean = true;
 
   @ViewChild('closeModal') closebutton;
+  mode = 'add';
 
   constructor(
     private commonservice: CommonService,
@@ -43,42 +46,46 @@ export class CustomerComponent implements OnInit {
   ngOnInit() {
     this.getCustomer();
   }
-  onSubmit() {
-    this.submitted = true;
-    if (this.CustomerForm.invalid) {
-      return;
-    }
-    alert('success');
-  }
+  // onSubmit() {
+  //   this.submitted = true;
+  //   if (this.CustomerForm.invalid) {
+  //     return;
+  //   }
+  //   alert('success');
+  // }
 
   OpenAddCustomer() {
+    this.mode = 'add';
     this.showAddCustomer = true;
+    this.isCreating = true;
+    this.isEditing = false;
   }
 
   resetCustomereForm() {
+    this.showAddCustomer=false;
     this.CustomerForm.reset();
     this.CustomerForm.updateValueAndValidity();
   }
 
-  AddCustomer() {
-    const customerObj = {
-      name: this.CustomerForm.controls['name'].getRawValue(),
-      address: this.CustomerForm.controls['address'].getRawValue(),
-      email: this.CustomerForm.controls['email'].getRawValue(),
-    };
-    if (this.CustomerForm.valid) {
-      this.commonservice.addCustomer(customerObj).subscribe(
-        (response: any) => {
-          this.closebutton.nativeElement.click();
-          this.resetCustomereForm();
-          this.getCustomer();
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    }
-  }
+  // AddCustomer() {
+  //   const customerObj = {
+  //     name: this.CustomerForm.controls['name'].getRawValue(),
+  //     address: this.CustomerForm.controls['address'].getRawValue(),
+  //     email: this.CustomerForm.controls['email'].getRawValue(),
+  //   };
+  //   if (this.CustomerForm.valid) {
+  //     this.commonservice.addCustomer(customerObj).subscribe(
+  //       (response: any) => {
+  //         this.closebutton.nativeElement.click(); // 
+  //         this.resetCustomereForm();
+  //         this.getCustomer();
+  //       },
+  //       (err) => {
+  //         console.log(err);
+  //       }
+  //     );
+  //   }
+  // }
 
   getCustomer() {
     this.commonservice.getAllCustomer().subscribe(
@@ -93,10 +100,16 @@ export class CustomerComponent implements OnInit {
     );
   }
 
-  EditCustomerDetails(id: number) {
-    this.commonservice.getCustomerById(id).subscribe((res: any) => {
-      this.customerToUpdate = res;
-    });
+  EditCustomerDetails(c : Customer) {
+    // this.commonservice.getCustomerById(c.cust_id).subscribe((res: any) => {
+    //   this.customerToUpdate = res;
+    // });
+    this.showAddCustomer = true;
+    this.isEditing = true;
+    this.isCreating = false;
+    this.mode = 'edit';
+    this.customerToUpdate = c;
+
   }
   UpdateCustomer() {
     this.commonservice
@@ -123,4 +136,13 @@ export class CustomerComponent implements OnInit {
   clear() {
     this.customer.cust_id = 0;
   }
+
+  onCustomerAddOrUpdateCallback($event){
+    console.log($event);
+    if($event && $event.message === 'success'){
+      this.closebutton.nativeElement.click(); // 
+      this.getCustomer();
+    }
+  }
+
 }

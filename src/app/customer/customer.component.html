@@ -1,16 +1,22 @@
-<!-- Add customer modal-->
-<div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
+<!-- Add/edit customer modal-->
+<div class="modal fade" id="AddEditModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form [formGroup]="CustomerForm" (ngSubmit)="onSubmit()">
+      <!-- <form [formGroup]="CustomerForm"> -->
         <div class="modal-header">
-          <h4 class="modal-title" id="exampleModalLabel">
-            Add Customer Details
+          <h4 class="modal-title" id="exampleModalLabel" *ngIf="isCreating">
+             Add Customer Details
           </h4>
+          <h4 class="modal-title" id="exampleModalLabel" *ngIf="isEditing">
+            Edit Customer Details
+         </h4>
           <button type="button" class="btn-close" #closeModal data-bs-dismiss="modal" aria-label="Close" (click)="resetCustomereForm()"></button>
         </div>
         <div class="modal-body">
-          <div class="col-md-6">
+         
+          <app-add-update-customer *ngIf="showAddCustomer" [mode]="mode" [customer]="customerToUpdate" (on-customer-add-update)="onCustomerAddOrUpdateCallback($event)"></app-add-update-customer>
+
+          <!-- <div class="col-md-6">
             <label for="CustomerName" class="form-label">Full Name</label>
             <input type="text" class="form-control" id="exampleNameInput" formControlName="name"
               [ngClass]="{'is-invalid': CustomerForm.controls['name'].errors && (CustomerForm.get('name').touched && CustomerForm.get('name').dirty) }" />
@@ -32,25 +38,25 @@
               <small *ngIf="CustomerForm.get('email').errors && submitted && CustomerForm.get('email').errors['pattern'] " class="text-danger" >Enter valid email address</small>
             <br>
           </div>
-          <br />
+          <br /> -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetCustomereForm()">
+          <!-- <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="resetCustomereForm()">
             Cancel
-          </button>
-          <button type="submit" class="btn btn-primary" (click)="AddCustomer()">
+          </button> -->
+          <!-- <button type="submit" class="btn btn-primary" (click)="AddCustomer()">
             Add Customer
-          </button>
+          </button> -->
         </div>
         <br>
-      </form>
+      <!-- </form> -->
     </div>
   </div>
 </div>
 
 <!-- add customer modal-->
 
-<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddModal" data-bs-whatever="@getbootstrap" (click)="OpenAddCustomer()">
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddEditModal" data-bs-whatever="@getbootstrap" (click)="OpenAddCustomer()">
   Add New customer
 </button>
 <br />
@@ -74,8 +80,8 @@
       <td>{{ c.email }}</td>
       <td>{{ c.address }}</td>
       <td>
-        <button class="btn btn-primary" (click)="EditCustomerDetails(c.cust_id)" data-bs-toggle="modal"
-          data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">
+        <button class="btn btn-primary" (click)="EditCustomerDetails(c)" data-bs-toggle="modal"
+          data-bs-target="#AddEditModal" data-bs-whatever="@getbootstrap">
           Edit
         </button>
         ||
@@ -115,7 +121,7 @@
 </div>
 
 <!-- edit modal-->
-
+ <!-- 
 <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -126,7 +132,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="mb-3">
+        <app-add-update-customer *ngIf="showAddCustomer" [mode]="'add'" (on-customer-update)="onCustomerUpdateCallback($event)"></app-add-update-customer>
+
+       <div class="mb-3">
           <label for="FullName" class="col-form-label">Full Name:</label>
           <input type="text" class="form-control" id="full-name" [(ngModel)]="customerToUpdate.name" />
         </div>
@@ -137,7 +145,7 @@
         <div class="mb-3">
           <label for="email" class="col-form-label">Email </label>
           <input type="email" class="form-control" id="email" [(ngModel)]="customerToUpdate.email" />
-        </div>
+        </div> 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
@@ -149,4 +157,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

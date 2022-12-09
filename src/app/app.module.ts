@@ -8,6 +8,8 @@ import { OrderComponent } from './order/order.component';
 import { ProductComponent } from './product/product.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { AddUpdateCustomerComponent } from './add-update-customer/add-update-customer.component';
+import { AddupdateproductComponent } from './add-update-product/add-update-product.component';
 
 
 @NgModule({
@@ -16,6 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
     CustomerComponent,
     OrderComponent,
     ProductComponent,
+    AddUpdateCustomerComponent,
+    AddupdateproductComponent,
     
   ],
   imports: [

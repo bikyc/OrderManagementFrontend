@@ -3,7 +3,7 @@
 <div class="modal fade" id="AddModal" tabindex="-1" aria-labelledby="AddModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form [formGroup]="OrderForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="OrderForm" >
         <div class="modal-header">
           <h4 class="modal-title" id="exampleModalLabel">Add new Order Details</h4>
           <button type="button" #closeModal (click)="resetOrderForm()" class="btn-close" data-bs-dismiss="modal"
@@ -69,7 +69,7 @@
           <div class="footer" layout="row" layout-align="center center ">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal"
               (click)="resetOrderModal()">Cancel</button> ||
-            <button type="submit" class="btn btn-primary" (click)="AddOrder()"> Place Order </button>
+            <button type="submit" class="btn btn-primary" (click)="AddOrder()" [disabled]="!OrderForm.valid"> Place Order </button>
           </div>
         </div>
       </form>

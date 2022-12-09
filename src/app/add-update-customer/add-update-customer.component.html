@@ -1,0 +1,39 @@
+<div>
+    <form [formGroup]="CustomerForm">
+    <div class="col-md-6">
+        <label for="CustomerName" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="exampleNameInput" formControlName="name"
+            [ngClass]="{'is-invalid': CustomerForm.controls['name'].errors && (CustomerForm.get('name').touched && CustomerForm.get('name').dirty) }" />
+        <small
+            *ngIf=" CustomerForm.controls['name'].errors &&((CustomerForm.get('name').touched ) || (CustomerForm.get('name').dirty))"
+            class="text-danger">Fullname is required</small>
+        <br>
+    </div>
+    <div class="col-md-6">
+        <label for="exampleInputAddress" class="form-label">Address</label>
+        <input type="text" class="form-control" id="exampleInputAddress" formControlName="address"
+            [ngClass]="{'is-invalid': submitted && CustomerForm.controls['address'].errors && ( CustomerForm.get('address').touched || CustomerForm.get('address').dirty) }" />
+        <small
+            *ngIf="CustomerForm.controls['address'].errors && ( CustomerForm.get('address').touched || CustomerForm.get('address').dirty)"
+            class="text-danger">Address is required</small>
+        <br>
+    </div>
+    <div class="col-md-6">
+        <label for="exampleInputEmail1" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+            formControlName="email"
+            [ngClass]="{'is-invalid': submitted && CustomerForm.controls['email'].errors && (CustomerForm.get('email').touched || CustomerForm.get('email').dirty) }" />
+        <small
+            *ngIf="CustomerForm.get('email').errors && (CustomerForm.get('email').touched || CustomerForm.get('email').dirty)"
+            class="text-danger">Email is required</small>
+        <small *ngIf="CustomerForm.get('email').errors && submitted && CustomerForm.get('email').errors['pattern'] "
+            class="text-danger">Enter valid email address</small>
+        <br>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary" [disabled]="!CustomerForm.valid" (click)="AddOrUpdateCustomer()">
+            {{mode === 'add' ? 'Add' : 'Update'}} 
+          </button>
+    </div>
+</form>
+</div>

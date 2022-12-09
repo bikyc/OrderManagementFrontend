@@ -1,0 +1,44 @@
+<div>
+    <form [formGroup]="ProductForm">
+
+        <div class="col-md-6">
+            <label for="ProductName" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="exampleProductName" formControlName="pName"
+                [ngClass]="{'is-invalid':  ProductForm.controls['pName'].errors && (ProductForm.get('pName').touched || ProductForm.get('pName').dirty)}">
+            <small
+                *ngIf="ProductForm.controls['pName'].errors && (ProductForm.get('pName').touched || ProductForm.get('pName').dirty)"
+                class="text-danger">Product Name is
+                required</small>
+        </div>
+        <br>
+        <div class="col-md-6">
+            <label for="exampleInputMfdDate" class="form-label">Manufactured Date</label>
+            <input type="date" class="form-control" id="exampleInputMfdDate"
+                [ngClass]="{'is-invalid': ProductForm.controls['pMfdDate'].errors && (ProductForm.get('pMfdDate').touched || ProductForm.get('pMfdDate').dirty)}"
+                formControlName="pMfdDate">
+            <small
+                *ngIf="ProductForm.controls['pMfdDate'].errors && (ProductForm.get('pMfdDate').touched || ProductForm.get('pMfdDate').dirty)"
+                class="text-danger">Manufactured date is
+                required</small>
+        </div>
+        <br>
+        <div class="col-md-6">
+            <label for="exampleInputPrice" class="form-label">Price</label>
+            <input type="number" min="0" class="form-control" id="exampleInputPrice"
+                [ngClass]="{'is-invalid': ProductForm.controls['pPrice'].errors && (ProductForm.get('pPrice').touched || ProductForm.get('pPrice').dirty)}"
+                formControlName="pPrice">
+            <small
+                *ngIf=" ProductForm.controls['pPrice'].errors && (ProductForm.get('pPrice').touched || ProductForm.get('pPrice').dirty)"
+                class="text-danger">Price is
+                required
+            </small>
+            <br>
+        </div>
+        <div>
+            <button [disabled]="!ProductForm.valid" type="submit" class="btn btn-primary"
+                (click)="AddOrUpdateProduct()">
+                {{mode === 'add' ? 'Add' : 'Update'}}
+            </button>
+        </div>
+    </form>
+</div>
