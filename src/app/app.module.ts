@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AddUpdateCustomerComponent } from './add-update-customer/add-update-customer.component';
 import { AddupdateproductComponent } from './add-update-product/add-update-product.component';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { AddupdateproductComponent } from './add-update-product/add-update-produ
     ProductComponent,
     AddUpdateCustomerComponent,
     AddupdateproductComponent,
+    LoginComponent,
     
   ],
   imports: [

@@ -19,7 +19,7 @@ export class CommonService {
   constructor(private httpClient: HttpClient) {
     this.serviceURL = 'https://localhost:44335/api';
   }
-  //Customer service
+  //Customer service starts
   addCustomer(customer: any): Observable<any> {
     return this.httpClient.post(
       this.serviceURL + '/Customer/AddCustomer',
@@ -57,6 +57,8 @@ export class CommonService {
     );
   }
 
+  // customer service ends 
+
   //  Product service
   addProduct(product: any): Observable<any> {
     return this.httpClient.post(
@@ -87,6 +89,16 @@ export class CommonService {
       httpOptions
     );
   }
+
+  deleteProduct(id: number) {
+    return this.httpClient.put(
+      this.serviceURL + `/Product/HideProductById/` + id,
+      httpOptions
+    );
+  }
+// product service ends
+
+
   //  Order service
   addOrder(order: any): Observable<any> {
     return this.httpClient.post(
@@ -124,10 +136,5 @@ export class CommonService {
     );
   }
 
-  deleteProduct(id: number) {
-    return this.httpClient.put(
-      this.serviceURL + `/Product/HideProductById/` + id,
-      httpOptions
-    );
-  }
+  
 }

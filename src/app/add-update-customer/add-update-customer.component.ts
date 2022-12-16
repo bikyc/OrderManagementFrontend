@@ -27,6 +27,8 @@ export class AddUpdateCustomerComponent implements OnInit{
   @Output("on-customer-add-update")
   onCustomerAddOrUpdate = new EventEmitter<object>();
 
+  @ViewChild('closeModal') closebutton;
+
   
   constructor(
     private commonservice: CommonService,
@@ -76,8 +78,11 @@ export class AddUpdateCustomerComponent implements OnInit{
     if (this.CustomerForm.valid) {
       this.commonservice.addCustomer(customerObj).subscribe(
         (response: any) => {
+          console.log(response)
           this.resetCustomereForm();
           this.onCustomerAddOrUpdate.emit({message:'success'});
+          this.closebutton.nativeElement.click();
+
         },
         (err) => {
           console.log(err);

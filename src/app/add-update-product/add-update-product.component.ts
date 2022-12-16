@@ -35,7 +35,7 @@ export class AddupdateproductComponent {
    }
 
   ngOnInit(){
-    console.log(this.mode);
+    // console.log(this.mode);
     console.log(this.product);
     if(this.product && this.product.prod_id > 0){
       this.ProductForm.get('pName').setValue(this.product.pName);
@@ -60,10 +60,12 @@ export class AddupdateproductComponent {
       pPrice: this.ProductForm.controls['pPrice'].getRawValue()
     }
     if(this.ProductForm.valid){
-    this.commonservice.addProduct(productObj).subscribe((response: any) => {
-      alert("Product Added Successfully")
-      this.closebutton.nativeElement.click();
+    this.commonservice.addProduct(productObj).subscribe(
+      (response: any) => {
       this.resetProductForm();
+      this.onProductAddOrUpdate.emit({message:'success'});
+      this.closebutton.nativeElement.click();
+      
      });
      (err) => {
       console.log(err);
@@ -86,7 +88,7 @@ export class AddupdateproductComponent {
     };
     
     this.commonservice
-      .updateCustomer(prod_id, productObj)
+      .updateProduct(prod_id, productObj)
       .subscribe((response: any) => {
         console.log(response);
         this.resetProductForm();
