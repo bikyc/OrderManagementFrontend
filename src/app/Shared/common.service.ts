@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Customer } from '../models/Customer';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';
+import { Users } from '../models/Users';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -12,7 +13,6 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root',
 })
-
 export class CommonService {
   serviceURL: string;
   postId: any;
@@ -57,7 +57,7 @@ export class CommonService {
     );
   }
 
-  // customer service ends 
+  // customer service ends
 
   //  Product service
   addProduct(product: any): Observable<any> {
@@ -96,15 +96,11 @@ export class CommonService {
       httpOptions
     );
   }
-// product service ends
-
+  // product service ends
 
   //  Order service
   addOrder(order: any): Observable<any> {
-    return this.httpClient.post(
-      this.serviceURL + '/Order/AddOrder',
-      order
-    );
+    return this.httpClient.post(this.serviceURL + '/Order/AddOrder', order);
   }
 
   getAllOrders(): Observable<Order[]> {
@@ -136,5 +132,7 @@ export class CommonService {
     );
   }
 
-  
+  Login(userDetials: Users) {
+    return this.httpClient.post(this.serviceURL + '/Login/login', userDetials);
+  }
 }

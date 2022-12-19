@@ -7,10 +7,12 @@ import { CustomerComponent } from './customer/customer.component';
 import { OrderComponent } from './order/order.component';
 import { ProductComponent } from './product/product.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AddUpdateCustomerComponent } from './add-update-customer/add-update-customer.component';
 import { AddupdateproductComponent } from './add-update-product/add-update-product.component';
 import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
+import { HeadersInterceptor } from './headers.interceptor';
 
 
 @NgModule({
@@ -22,6 +24,7 @@ import { LoginComponent } from './login/login.component';
     AddUpdateCustomerComponent,
     AddupdateproductComponent,
     LoginComponent,
+    HomeComponent,
     
   ],
   imports: [
@@ -32,7 +35,11 @@ import { LoginComponent } from './login/login.component';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS,
+    useClass: HeadersInterceptor  ,
+    multi: true}  
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
