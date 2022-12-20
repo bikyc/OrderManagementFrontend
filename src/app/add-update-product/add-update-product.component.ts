@@ -15,6 +15,7 @@ export class AddupdateproductComponent {
   ProductForm: FormGroup;
   isEditing: boolean = false;
    isCreating: boolean = true;
+   showAddProduct: boolean=true;
   @Input('mode')
   mode = "add ";
   
@@ -64,7 +65,7 @@ export class AddupdateproductComponent {
       (response: any) => {
       this.resetProductForm();
       this.onProductAddOrUpdate.emit({message:'success'});
-      this.closebutton.nativeElement.click();
+      this.showAddProduct = true;
       
      });
      (err) => {

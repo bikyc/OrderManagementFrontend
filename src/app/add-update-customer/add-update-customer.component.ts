@@ -14,7 +14,7 @@ export class AddUpdateCustomerComponent implements OnInit{
   CustomerForm: FormGroup;
   submitted = false;
   customerToUpdate: Customer = new Customer();
-
+  showAddCustomer: boolean= true;
    isEditing: boolean = false;
    isCreating: boolean = true;
 
@@ -28,6 +28,7 @@ export class AddUpdateCustomerComponent implements OnInit{
   onCustomerAddOrUpdate = new EventEmitter<object>();
 
   @ViewChild('closeModal') closebutton;
+ 
 
   
   constructor(
@@ -81,7 +82,7 @@ export class AddUpdateCustomerComponent implements OnInit{
           console.log(response)
           this.resetCustomereForm();
           this.onCustomerAddOrUpdate.emit({message:'success'});
-          this.closebutton.nativeElement.click();
+          this.showAddCustomer = true;
 
         },
         (err) => {

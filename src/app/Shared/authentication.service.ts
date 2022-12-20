@@ -8,7 +8,7 @@ import { Users } from '../models/Users';
 })
 export class AuthenticationService {
   serviceURL: string;
-
+  isLoggedIn = false;
   constructor(private httpClient: HttpClient) {
     this.serviceURL = 'https://localhost:44335/api';
   }

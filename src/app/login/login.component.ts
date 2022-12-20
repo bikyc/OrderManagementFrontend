@@ -38,6 +38,7 @@ export class LoginComponent  implements OnInit{
           localStorage.clear();
            localStorage.setItem('token', (res.token));
           // this.intercept.intercept("JWT",JSON.stringify(res.Token));
+          this.AuthService.isLoggedIn = true;
           this.router.navigate(['/home']);
         }
       });

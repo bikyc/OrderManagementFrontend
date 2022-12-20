@@ -17,7 +17,7 @@ export class ProductComponent {
   showAddProduct = false;
   isEditing: boolean = false;
   isCreating: boolean = true;
-
+  
   @ViewChild('closeModal') closebutton;
   mode = 'add';
 
