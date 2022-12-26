@@ -1,3 +1,6 @@
+
+
+
 <section class="vh-100">
     <div class="container-fluid h-custom" style="background-color:#E6E6FA">
       <div class="row d-flex justify-content-center align-items-center h-100">
@@ -24,7 +27,13 @@
               <label class="form-label" for="form3Example4" >Password</label>  
               <input type="password" id="form3Example4" class="form-control form-control-lg" formControlName="password"
                 [ngClass]="{'is-invalid':LoginForm.controls['password'].errors && (LoginForm.get('password').touched && LoginForm.get('password').dirty)}"/>
-                <small
+                <span>
+                  <i class="fa fa-eye" aria-hidden="true"  type="button" id="eye"></i>
+               </span>
+               
+               
+               
+               <small
                 *ngIf=" LoginForm.controls['password'].errors &&((LoginForm.get('password').touched ) || (LoginForm.get('password').dirty))"
                 class="text-danger">Password is required</small>
             </div>

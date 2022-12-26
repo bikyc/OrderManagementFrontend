@@ -15,10 +15,13 @@
           <li class="nav-item">
             <a class="nav-link" [routerLink]="['/home/order']">Order</a>
           </li>
-          <li class="nav-item"><a class="nav-link" [routerLink]="['/login']" (click)="logout()">Logout</a></li>
-          
          
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item" >
+              <a class="nav-link "  [routerLink]="['/login']" (click)="logout()">Logout</a></li>
+          </ul>
+           
         
       </div>
     </div>

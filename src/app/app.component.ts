@@ -14,6 +14,12 @@ export class AppComponent {
 
   constructor(private router: Router, public AuthService: AuthenticationService) {}
   
+  ngOnInit(){
+    const token = localStorage.getItem('token');
+    if(token){
+      this.AuthService.isLoggedIn = true;
+    }
+  }
 
   logout(): void {
     localStorage.removeItem('token');
