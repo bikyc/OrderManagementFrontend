@@ -63,7 +63,7 @@
 <br />
 
 <!-- table starts-->
-<table class="table">
+<!-- <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -92,7 +92,7 @@
       </td>
     </tr>
   </tbody>
-</table>
+</table> -->
 
 <!-- Delete Modal -->
 <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel"
@@ -158,3 +158,14 @@
     </div>
   </div>
 </div> -->
+
+<ag-grid-angular 
+    style="width: 1000px; height: 1000px;" 
+    class="ag-theme-balham"
+    [columnDefs]="columnDefs"
+    [rowData]="rowData"
+    [rowSelection]="'multiple'"  
+    [animateRows]="true"
+    (cellClicked)="onCellClicked($event)"
+    >
+  </ag-grid-angular>

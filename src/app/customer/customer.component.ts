@@ -14,6 +14,18 @@ import { CommonService } from '../Shared/common.service';
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent implements OnInit {
+  columnDefs = [
+     {headerName: '#', valueGetter: "node.rowIndex + 1"},
+    { headerName: 'Full Name', field: 'name', sortable: true, filter: true },
+    { headerName: 'Email', field: 'email', sortable: true, filter: true },
+    { headerName: 'Address', field: 'address', sortable: true, filter: true },
+    {
+      headerName: 'Action',
+      cellRenderer: this.BtnRen
+    },
+  ];
+  rowData = [];
+
   customer = new Customer();
   customers = new Array<Customer>();
   customerToUpdate: Customer = new Customer();
@@ -23,14 +35,18 @@ export class CustomerComponent implements OnInit {
   showAddCustomer = false;
   isEditing: boolean = false;
   isCreating: boolean = true;
+  frameworkComponents: any;
 
   @ViewChild('closeModal') closebutton;
   mode = 'add';
+  // frameworkComponents: {
+  //   buttonRenderer: typeof ButtonRendererComponent; };
 
   constructor(
     private commonservice: CommonService,
-    public formGroup: FormBuilder) 
-    { this.CustomerForm = this.formGroup.group({
+    public formGroup: FormBuilder
+  ) {
+    this.CustomerForm = this.formGroup.group({
       name: ['', Validators.required],
       address: ['', Validators.required],
       email: [
@@ -62,7 +78,7 @@ export class CustomerComponent implements OnInit {
   }
 
   resetCustomereForm() {
-    this.showAddCustomer=false;
+    this.showAddCustomer = false;
     this.CustomerForm.reset();
     this.CustomerForm.updateValueAndValidity();
   }
@@ -76,7 +92,7 @@ export class CustomerComponent implements OnInit {
   //   if (this.CustomerForm.valid) {
   //     this.commonservice.addCustomer(customerObj).subscribe(
   //       (response: any) => {
-  //         this.closebutton.nativeElement.click(); // 
+  //         this.closebutton.nativeElement.click(); //
   //         this.resetCustomereForm();
   //         this.getCustomer();
   //       },
@@ -93,6 +109,8 @@ export class CustomerComponent implements OnInit {
         console.log(res);
         let customerList = res;
         this.customers = customerList.filter((x) => x.isActive == true);
+        // this.customer
+        this.rowData = this.customers;
       },
       (err: any) => {
         console.log(err);
@@ -100,7 +118,7 @@ export class CustomerComponent implements OnInit {
     );
   }
 
-  EditCustomerDetails(c : Customer) {
+  EditCustomerDetails(c) {
     // this.commonservice.getCustomerById(c.cust_id).subscribe((res: any) => {
     //   this.customerToUpdate = res;
     // });
@@ -109,7 +127,6 @@ export class CustomerComponent implements OnInit {
     this.isCreating = false;
     this.mode = 'edit';
     this.customerToUpdate = c;
-
   }
   UpdateCustomer() {
     this.commonservice
@@ -137,11 +154,41 @@ export class CustomerComponent implements OnInit {
     this.customer.cust_id = 0;
   }
 
-  onCustomerAddOrUpdateCallback($event){
+  onCustomerAddOrUpdateCallback($event) {
     console.log($event);
-    if($event && $event.message === 'success'){
-      this.closebutton.nativeElement.click(); // 
+    if ($event && $event.message === 'success') {
+      this.closebutton.nativeElement.click(); //
       this.getCustomer();
+    }
+  }
+
+  ClickMe(a) {
+    console.log("I am here");
+  }
+
+  BtnRen(){
+    return `<button type="button" class="btn btn-sm btn-primary" data-action-type="Edit" data-bs-toggle="modal"
+    data-bs-target="#AddEditModal" data-bs-whatever="@getbootstrap">Edit</button>
+    <button type="button" class="btn btn-sm btn-danger" data-action-type="Delete" data-bs-toggle="modal"
+    data-bs-target="#DeleteModal">Delete</button>`
+  }
+
+  onCellClicked($event: any){
+    console.log($event);
+    const data = $event.event.target.getAttribute("data-action-type");
+    console.log(data);
+    switch(data){
+      case 'Edit':{
+        //alert('view is clicked');
+        console.log($event.data);
+        this.EditCustomerDetails($event.data);
+        break;
+      }
+      case 'Delete':{
+        //alert('delete is clicked');
+        this.getCustomerIdForDelete($event.data.cust_id);
+        break;
+      }
     }
   }
 

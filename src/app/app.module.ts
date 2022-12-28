@@ -13,6 +13,7 @@ import { AddupdateproductComponent } from './add-update-product/add-update-produ
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { HeadersInterceptor } from './headers.interceptor';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { HeadersInterceptor } from './headers.interceptor';
     AddUpdateCustomerComponent,
     AddupdateproductComponent,
     LoginComponent,
-    HomeComponent,
+    HomeComponent
     
   ],
   imports: [
@@ -33,7 +34,9 @@ import { HeadersInterceptor } from './headers.interceptor';
     MatSlideToggleModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    // AgGridModule.withComponents([ButtonRendererComponent])
+    AgGridModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS,
