@@ -118,6 +118,13 @@ export class CommonService {
     );
   }
 
+  updateOrderStatus(id: number, orderstatus:string): Observable<any> {
+    return this.httpClient.put(
+      this.serviceURL + '/Order/UpdateOrderStatusById/' + id+'/'+orderstatus,
+      httpOptions
+    );
+  }
+
   getOrderById(id: number): Observable<Order[]> {
     return this.httpClient.get<Order[]>(
       this.serviceURL + '/Order/GetOrdersById/' + id,

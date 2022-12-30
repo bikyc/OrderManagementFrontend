@@ -5,6 +5,7 @@ export class Order {
     order_id: number=0;
     totalPrice: number= 0 ;
     orderDate: string='';
+    OrderStatus: string='pending';
     quantity: any; number= 0;
     price: number= 0;
     address: string='';

@@ -15,7 +15,7 @@ import { CommonService } from '../Shared/common.service';
 })
 export class CustomerComponent implements OnInit {
   columnDefs = [
-     {headerName: '#', valueGetter: "node.rowIndex + 1"},
+     {headerName: '#', valueGetter: "node.rowIndex + 1", width:40 },
     { headerName: 'Full Name', field: 'name', sortable: true, filter: true },
     { headerName: 'Email', field: 'email', sortable: true, filter: true },
     { headerName: 'Address', field: 'address', sortable: true, filter: true },
@@ -73,6 +73,7 @@ export class CustomerComponent implements OnInit {
   OpenAddCustomer() {
     this.mode = 'add';
     this.showAddCustomer = true;
+    this.CustomerForm.reset();
     this.isCreating = true;
     this.isEditing = false;
   }
