@@ -86,7 +86,7 @@
 <br>
 
 <!-- List of order table starts-->
-<table class="table" *ngIf="Orders && Orders.length">
+<!-- <table class="table" *ngIf="Orders && Orders.length">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -111,7 +111,7 @@
       <td>{{ o.totalPrice }}</td>
       <td> status ...</td>
       <td>
-        <!-- <button class="btn btn-primary" (click)="EditOrderDetails(o)" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> || -->
+         <button class="btn btn-primary" (click)="EditOrderDetails(o)" data-bs-toggle="modal" data-bs-target="#EditModal" data-bs-whatever="@getbootstrap">Edit</button> || 
         <button class="btn btn-danger" (click)="getOrderIdForDelete(o.order_id)" data-bs-toggle="modal"
           data-bs-target="#DeleteModal">
           Delete
@@ -119,7 +119,7 @@
       </td>
     </tr>
   </tbody>
-</table>
+</table> -->
 
 <!-- Delete Modal -->
 <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel"

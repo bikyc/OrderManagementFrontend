@@ -21,7 +21,8 @@ export class CustomerComponent implements OnInit {
     { headerName: 'Address', field: 'address', sortable: true, filter: true },
     {
       headerName: 'Action',
-      cellRenderer: this.BtnRen
+      cellRenderer: this.BtnRen,
+      autoHeight: true
     },
   ];
   rowData = [];

@@ -14,7 +14,9 @@
         </div>
         <div class="modal-body">
          
-          <app-add-update-customer *ngIf="showAddCustomer" [mode]="mode" [customer]="customerToUpdate" (on-customer-add-update)="onCustomerAddOrUpdateCallback($event)"></app-add-update-customer>
+          <app-add-update-customer *ngIf="showAddCustomer" [mode]="mode"
+           [customer]="customerToUpdate" (on-customer-add-update)="onCustomerAddOrUpdateCallback($event)">
+          </app-add-update-customer>
 
           <!-- <div class="col-md-6">
             <label for="CustomerName" class="form-label">Full Name</label>
@@ -109,10 +111,10 @@
       </div>
       <div class="modal-body">Are sure you want to delete the customer ???</div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">
           NO
         </button>
-        <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal" (click)="deleteCustomer()">
+        <button type="button" class="btn btn-sm btn-outline-success" data-bs-dismiss="modal" (click)="deleteCustomer()">
           Yes
         </button>
       </div>
@@ -167,5 +169,6 @@
     [rowSelection]="'multiple'"  
     [animateRows]="true"
     (cellClicked)="onCellClicked($event)"
+    gridOptions.rowHeight = 50;
     >
   </ag-grid-angular>

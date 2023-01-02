@@ -13,7 +13,7 @@
         </div>
         <div class="modal-body">
 
-          <app-add-update-product *ngIf="showAddProduct" [mode]="mode" [product]="productToUpdate" (on-product-add-update)="onProductAddOrUpdateCallback($event)"></app-add-update-product>
+          <app-add-update-product *ngIf="isEditingAdding" [mode]="mode" [product]="productToUpdate" (on-product-add-update)="onProductAddOrUpdateCallback($event)"></app-add-update-product>
 
 
           <!-- <div class="col-md-6">
@@ -54,11 +54,14 @@
 </div>
 <!-- Add product modal ends here-->
 
+<br>
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddUpdateModal" data-bs-whatever="@getbootstrap"  (click)="OpenAddProduct()" >Add
   New Product </button>
+  <br>
+  <br>
 
 <!-- table starts-->
-<table class="table">
+<!-- <table class="table">
   <thead>
     <tr>
       <th scope="col">#</th>
@@ -83,11 +86,11 @@
     </tr>
 
   </tbody>
-</table>
+</table> -->
 
 
 <!-- Delete Modal -->
-<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel"
+<div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="DeleteModalLabel" 
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -113,6 +116,7 @@
 <!-- edit modal-->
 
 <!--
+  
 <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -141,3 +145,16 @@
     </div>
   </div>
 </div> -->
+
+
+<ag-grid-angular 
+    style="width: 700px; height: 100%;"
+    class="ag-theme-balham"
+    [columnDefs]="columnDefs"
+    [rowData]="rowData"
+    [rowSelection]="'multiple'"  
+    [animateRows]="true"
+    (cellClicked)="onCellClicked($event)"
+
+    >
+  </ag-grid-angular> 

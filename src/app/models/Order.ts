@@ -1,10 +1,13 @@
+import * as moment from "moment";
 import { Customer } from "./Customer";
 import { Product } from "./Product";
 
 export class Order {
     order_id: number=0;
     totalPrice: number= 0 ;
-    orderDate: string='';
+    orderDate: Date=new Date();
+    // orderDate: Date=moment(Date).format('YYYY-MM-dd');
+    // orderDate:string = moment(new Date()).format('YYYY/MM/DD');
     OrderStatus: string='pending';
     quantity: any; number= 0;
     price: number= 0;

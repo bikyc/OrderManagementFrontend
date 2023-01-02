@@ -5,6 +5,8 @@ import { Customer } from '../models/Customer';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';
 import { CommonService } from '../Shared/common.service';
+import * as moment from 'moment';
+
 
 @Component({
   selector: 'app-order',
@@ -75,6 +77,8 @@ export class OrderComponent {
       productId: +this.OrderForm.controls['productId'].getRawValue(),
       totalPrice: this.OrderForm.controls['totalPrice'].getRawValue(),
       quantity: this.OrderForm.controls['quantity'].getRawValue(),
+      orderStatus: this.OrderForm.controls['orderStatus'].getRawValue(),
+      
     };
     if (this.OrderForm.valid) {
       this.commonservice.addOrder(orderObj).subscribe(
@@ -209,6 +213,8 @@ export class OrderComponent {
   clear() {
     this.order.order_id = 0; // clears the id of the product that is to be deleted
   }
+
+  // to display the column name in the ag grid
   columnDefs = [
     {
       headerName: '#',
@@ -228,6 +234,8 @@ export class OrderComponent {
       field: 'product.pName',
       sortable: true,
       filter: true,
+      wrapText: true,
+      autoHeight: true,
       width: 180,
     },
     {
@@ -235,7 +243,8 @@ export class OrderComponent {
       field: 'orderDate',
       sortable: true,
       filter: true,
-      width: 200,
+      width: 150,
+      cellRenderer: this.OrderDateFormatter
     },
     {
       headerName: 'Price',
@@ -270,10 +279,18 @@ export class OrderComponent {
       headerName: 'Action',
       cellRenderer: this.BtnRen,
       width: 250,
+      autoHeight: true
     },
   ];
   rowData = [];
 
+  // to display order date only in the ag grid
+  OrderDateFormatter(params){
+    return moment(params.data.orderDate).format('YYYY-MM-DD');
+  }
+
+
+  // to display buttons in the ag grid
   BtnRen(data: any) {
     switch (data.data.orderStatus){
       case "completed":
@@ -298,7 +315,7 @@ export class OrderComponent {
            data-bs-target="#DeleteModal">Delete</button>`
            ;
       }
-      case 'Pending':
+      case 'pending':
         {
           return `
            <button type="button" class="btn btn-sm btn-danger" data-action-type="Cancel" data-bs-toggle="modal"
@@ -342,13 +359,4 @@ export class OrderComponent {
       }
     }
   }
-
-  // const statusColumn = {
-  //       headerName: "Status",
-  //       field: "status",
-  //       cellClassRules: {
-  //         'status-active': (params) => params.value === 'active',
-  //         'status-inactive': (params) => params.value === 'inactive'
-  //       }
-  //     };
 }
